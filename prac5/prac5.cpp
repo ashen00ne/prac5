@@ -173,8 +173,8 @@ void bestStudents() {
 }
 
 int sameSexStud(char* sex) {
-	int i = 0, p = 0;
-	for (; !(stud[i].isEmpty()); i++) {
+	int p = 0;
+	for (int i = 0; !(stud[i].isEmpty() || i < L); i++) {
 		student* s = &stud[i];
 		if (s->sex[0] == *sex) p++;
 	}
@@ -258,7 +258,7 @@ void recordChanges() {
 	string buff;
 	cout << "enter the student's id: ";
 	cin >> id_stud;
-	for (int i = 0; !(stud[i].isEmpty()); i++) {
+	for (int i = 0; !(stud[i].isEmpty() || i < L); i++) {
 		student* s = &stud[i];
 		if (s->id == id_stud) {
 			k = i;
@@ -327,7 +327,7 @@ void recordChanges() {
 	}
 	ofstream file_out("buffer.txt");
 	if (file_out.is_open()) {
-		for (int i = 0; !(stud[i].isEmpty()); i++) {
+		for (int i = 0; !(stud[i].isEmpty() || i < L); i++) {
 			file_out << stud[i].fullName << '\n' << stud[i].sex << '\n' << stud[i].group << '\n' << stud[i].id <<
 				'\n' << stud[i].grades[0] << '\n' << stud[i].grades[1] << '\n' << stud[i].grades[2] << '\n' <<
 				stud[i].grades[3] << '\n' << stud[i].grades[4] << '\n' << stud[i].grades[5] << '\n' << stud[i].grades[6] << '\n' << stud[i].grades[7] << '\n';
@@ -357,6 +357,7 @@ void recordChanges() {
 	file_clear.open("buffer.txt", ofstream::out | ofstream::trunc);
 	file_clear.close();
 	new_file.close();
+	cout << "changes applied\n";
 }
 
 int main() {
@@ -415,7 +416,7 @@ int main() {
 			bool endCyc;
 			cout << "enter the group number: ";
 			cin >> group;
-			for (int i = 0; !(stud[i].isEmpty()); i++) {
+			for (int i = 0; !(stud[i].isEmpty() || i < L); i++) {
 				endCyc = dataGroup(i, group);
 				if (endCyc == 0) break;
 			}
@@ -441,7 +442,7 @@ int main() {
 			bool endCyc;
 			cout << "1. students without a scholaship\n2. students with a scholaship\n3. students study at <excellent>\n";
 			cin >> g;
-			for (int i = 0; !(stud[i].isEmpty()); i++) {
+			for (int i = 0; !(stud[i].isEmpty() || i < L); i++) {
 				endCyc = divByGrades(i, g);
 				if (endCyc == 0) break;
 			}
@@ -451,7 +452,7 @@ int main() {
 			int id;
 			cout << "enter id: ";
 			cin >> id;
-			for (int i = 0; !(stud[i].isEmpty()); i++) {
+			for (int i = 0; !(stud[i].isEmpty() || i < L); i++) {
 				dataStudentById(id, i);
 			}
 			break;
