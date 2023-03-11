@@ -10,6 +10,8 @@ M
 4
 5
 4
+village
+70000
 Fadeeva Elena Evgenevna
 W
 2372
@@ -22,6 +24,8 @@ W
 5
 3
 4
+city
+120000
 Kulagin Evgeniy Evgenievich
 M
 2372
@@ -34,3 +38,5 @@ M
 5
 5
 5
+village
+68000

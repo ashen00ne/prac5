@@ -6,6 +6,7 @@
 using namespace std;
 const int L = 100;
 const int G = 8;
+const int Host = 50;
 
 struct student {
 	string fullName;
@@ -13,6 +14,8 @@ struct student {
 	int group;
 	int id;
 	int grades[G];
+	string place_of_residence;
+	int family_income;
 	bool isEmpty() {
 		return fullName.empty() && sex[0] == 0 && group == 0 && id == 0;
 	}
@@ -55,8 +58,16 @@ bool readFile() {
 					}
 					else {
 						getline(dataStud, data);
-						cout << disc[i] << data << ";\n";
+						cout << disc[i] << data << ";";
 					}
+			}
+			if (!dataStud.eof()) {
+				getline(dataStud, data);
+				cout << "place of residence: " << data << "; ";
+			}
+			if (!dataStud.eof()) {
+				getline(dataStud, data);
+				cout << "family income: " << data << ";\n";
 			}
 		}
 		dataStud.close();
@@ -110,6 +121,14 @@ int addProfile(int k) {
 		for (int k = 0; k <= 7; k++) {
 			profile += to_string(s->grades[k]) + "\n";
 		}
+		cout << "enter place of residence: ";
+		cin.get();
+		getline(cin, s->place_of_residence);
+		profile += s->place_of_residence + "\n";
+		cout << "enter family income: ";
+		cin >> s->family_income;
+		cin.sync();
+		profile += to_string(s->family_income) + "\n";
 		cout << "profile added\n";
 		data << profile;
 		data.close();
@@ -130,8 +149,9 @@ bool dataGroup(int k, int group) {
 			if (i != 7) {
 				cout << disc[i] << s->grades[i] << ", ";
 			}
-			else cout << disc[i] << s->grades[i] << ";\n";
+			else cout << disc[i] << s->grades[i] << ";";
 		}
+		cout << "place of residence: " << s->place_of_residence << "; family income: " << s->family_income << ";\n";
 		return 1;
 	}
 }
@@ -175,7 +195,7 @@ void bestStudents() {
 
 int sameSexStud(char* sex) {
 	int p = 0;
-	for (int i = 0; !(stud[i].isEmpty() || i < L); i++) {
+	for (int i = 0; !(stud[i].isEmpty() && i < L); i++) {
 		student* s = &stud[i];
 		if (s->sex[0] == *sex) p++;
 	}
@@ -196,8 +216,9 @@ bool divByGrades(int k, int g) {
 					if (k != 7) {
 						cout << disc[k] << s->grades[k] << ", ";
 					}
-					else cout << disc[k] << s->grades[k] << ";\n";
+					else cout << disc[k] << s->grades[k] << ";";
 				}
+				cout << "place of residence: " << s->place_of_residence << "; family income: " << s->family_income << ";\n";
 				break;
 			}
 		}
@@ -215,8 +236,9 @@ bool divByGrades(int k, int g) {
 				if (k != 7) {
 					cout << disc[k] << s->grades[k] << ", ";
 				}
-				else cout << disc[k] << s->grades[k] << ";\n";
+				else cout << disc[k] << s->grades[k] << ";";
 			}
+			cout << "place of residence: " << s->place_of_residence << "; family income: " << s->family_income << ";\n";
 		}
 		break;
 	case 3:
@@ -232,8 +254,9 @@ bool divByGrades(int k, int g) {
 				if (k != 7) {
 					cout << disc[k] << s->grades[k] << ", ";
 				}
-				else cout << disc[k] << s->grades[k] << ";\n";
+				else cout << disc[k] << s->grades[k] << ";";
 			}
+			cout << "place of residence: " << s->place_of_residence << "; family income: " << s->family_income << ";\n";
 		}
 		break;
 	}
@@ -249,8 +272,24 @@ void dataStudentById(int id, int k) {
 			if (i != 7) {
 				cout << disc[i] << s->grades[k] << ", ";
 			}
-			else cout << disc[i] << s->grades[k] << ";\n";
+			else cout << disc[i] << s->grades[k] << ";";
 		}
+		cout << "place of residence: " << s->place_of_residence << "; family income: " << s->family_income << ";\n";
+	}
+}
+
+void dataStudentByIncome(int i, int k) {
+	student* s = &stud[k];
+	if (s->family_income < i) {
+		cout << "Full name: " << s->fullName << "; " << "sex: " << s->sex << "; " << "group: " << s->group << "; " << "id: " << s->id << "; ";
+		string disc[8]{ "grades: diff. tests: physics - ", "phylosophy - ", "PE - ", "informatics - ", "English - ", "exams: math. analysis - ", "programming - ", "alg. and geom. - " };
+		for (int i = 0; i <= 7; i++) {
+			if (i != 7) {
+				cout << disc[i] << s->grades[k] << ", ";
+			}
+			else cout << disc[i] << s->grades[k] << ";";
+		}
+		cout << "place of residence: " << s->place_of_residence << "; family income: " << s->family_income << ";\n";
 	}
 }
 
@@ -259,7 +298,7 @@ void recordChanges() {
 	string buff;
 	cout << "enter the student's id: ";
 	cin >> id_stud;
-	for (int i = 0; !(stud[i].isEmpty() || i < L); i++) {
+	for (int i = 0; !(stud[i].isEmpty() && i < L); i++) {
 		student* s = &stud[i];
 		if (s->id == id_stud) {
 			k = i;
@@ -305,7 +344,6 @@ void recordChanges() {
 		cout << "enter the subject: ";
 		cin.ignore();
 		getline(cin, subject);
-		cout << "subject = " << subject << endl;
 		if (subject == "hysics") { arr_value = 0; }
 		else if (subject == "hylosophy") { arr_value = 1; }
 		else if (subject == "E") { arr_value = 2; }
@@ -322,16 +360,30 @@ void recordChanges() {
 		cin >> new_grade;
 		old->grades[arr_value] = new_grade;
 	}
+	else if (buff == "place of residence") {
+		string place;
+		cout << "enter a new value: ";
+		cin.ignore();
+		getline(cin, place);
+		old->fullName = place;
+	}
+	else if (buff == "family income") {
+		int income;
+		cout << "enter a new value: ";
+		cin >> income;
+		old->id = income;
+	}
 	else {
 		cout << "incorrect data\n";
 		return;
 	}
 	ofstream file_out("buffer.txt");
 	if (file_out.is_open()) {
-		for (int i = 0; !(stud[i].isEmpty() || i < L); i++) {
+		for (int i = 0; !(stud[i].isEmpty() && i < L); i++) {
 			file_out << stud[i].fullName << '\n' << stud[i].sex << '\n' << stud[i].group << '\n' << stud[i].id <<
 				'\n' << stud[i].grades[0] << '\n' << stud[i].grades[1] << '\n' << stud[i].grades[2] << '\n' <<
-				stud[i].grades[3] << '\n' << stud[i].grades[4] << '\n' << stud[i].grades[5] << '\n' << stud[i].grades[6] << '\n' << stud[i].grades[7] << '\n';
+				stud[i].grades[3] << '\n' << stud[i].grades[4] << '\n' << stud[i].grades[5] << '\n' << stud[i].grades[6] << '\n' << stud[i].grades[7] << '\n' <<
+				stud[i].place_of_residence << '\n' << stud[i].family_income << '\n';
 		}
 	}
 	else {
@@ -371,23 +423,28 @@ int main() {
 		getline(data, str);
 		stud[i].sex[0] = str[0];
 		getline(data, str);
-		int val = stoi(str);
-		stud[i].group = val;
+		stud[i].group = stoi(str);
 		getline(data, str);
-		val = stoi(str);
-		stud[i].id = val;
+		stud[i].id = stoi(str);
 		for (int k = 0; k < G; k++) {
 			getline(data, str);
-			val = stoi(str);
-			stud[i].grades[k] = val;
+			stud[i].grades[k] = stoi(str);
 		}
+		getline(data, str);
+		stud[i].place_of_residence = str;
+		getline(data, str);
+		stud[i].family_income = stoi(str);
 		if (data.peek() == ifstream::traits_type::eof()) break;
 	}
 	data.close();
 	cout << "\tMENU\n1.add a new student to the database\n2.make changes to the record\n3.output of all student data\n4.displaying information about all students of group N\n";
 	cout << "5.displaying the top students by average grade\n6.Displaying the number of male and female students\n";
-	cout << "7.output of data about students, depending on academic performance\n8.output of data about students by ip.\n0.exit program\n";
+	cout << "7.output of data about students, depending on academic performance\n8.output of data about students by id.\n9.data about students by family income\n0.exit program\n";
 	cin >> inp;
+	if (cin.fail()) {
+		cout << "incorrect data\n";
+		cin >> inp;
+	}
 	while (inp) {
 		switch (inp) {
 		case 1:
@@ -417,7 +474,7 @@ int main() {
 			bool endCyc;
 			cout << "enter the group number: ";
 			cin >> group;
-			for (int i = 0; !(stud[i].isEmpty() || i < L); i++) {
+			for (int i = 0; !(stud[i].isEmpty() && i < L); i++) {
 				endCyc = dataGroup(i, group);
 				if (endCyc == 0) break;
 			}
@@ -443,20 +500,37 @@ int main() {
 			bool endCyc;
 			cout << "1. students without a scholaship\n2. students with a scholaship\n3. students study at <excellent>\n";
 			cin >> g;
-			for (int i = 0; !(stud[i].isEmpty() || i < L); i++) {
+			for (int i = 0; !(stud[i].isEmpty() && i < L); i++) {
 				endCyc = divByGrades(i, g);
 				if (endCyc == 0) break;
 			}
 			break;
 		}
-		case 8:
+		case 8: 
+		{
 			int id;
 			cout << "enter id: ";
 			cin >> id;
-			for (int i = 0; !(stud[i].isEmpty() || i < L); i++) {
+			for (int i = 0; !(stud[i].isEmpty() && i < L); i++) {
 				dataStudentById(id, i);
 			}
+			break; 
+		}
+		case 9: 
+		{
+			int income;
+			cout << "enter income: ";
+			cin >> income;
+			for (int i = 0; !(stud[i].isEmpty() && i < L); i++) {
+				dataStudentByIncome(income, i);
+			}
 			break;
+		}
+		default:
+		{
+			cout << "incorrect data\n";
+			break;
+		}
 		}
 		cin >> inp;
 	}
